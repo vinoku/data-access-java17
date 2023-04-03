@@ -41,30 +41,51 @@ public class BookDao extends AbstractDao implements Dao<Book> {
         return book;
     }
 
+    // Using template pattern
     @Override
     public List<Book> findAll() {
         List<Book> books = Collections.emptyList();
-        String sql = "SELECT * FROM BOOK";
 
-        try (
-                Connection con = getConnection();
-                Statement stmt = con.createStatement();
-                ResultSet rset = stmt.executeQuery(sql);
-                ) {
-            books = new ArrayList<>();
-
-            while (rset.next()) {
+        JdbcQueryTemplate<Book> template = new JdbcQueryTemplate<Book>() {
+            @Override
+            public Book mapItem(ResultSet rset) throws SQLException {
                 Book book = new Book();
-                book.setId(rset.getLong("id"));
-                book.setTitle(rset.getString("title"));
-                books.add(book);
+                book.setId(rset.getLong("ID"));
+                book.setTitle(rset.getString("TITLE"));
+                book.setRating(rset.getInt("RATING"));
+                return book;
             }
-        } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        }
+        };
+
+        books = template.queryForList("SELECT ID, TITLE, RATING FROM BOOK");
 
         return books;
     }
+
+//    @Override
+//    public List<Book> findAll() {
+//        List<Book> books = Collections.emptyList();
+//        String sql = "SELECT * FROM BOOK";
+//
+//        try (
+//                Connection con = getConnection();
+//                Statement stmt = con.createStatement();
+//                ResultSet rset = stmt.executeQuery(sql);
+//                ) {
+//            books = new ArrayList<>();
+//
+//            while (rset.next()) {
+//                Book book = new Book();
+//                book.setId(rset.getLong("id"));
+//                book.setTitle(rset.getString("title"));
+//                books.add(book);
+//            }
+//        } catch (SQLException sqe) {
+//            sqe.printStackTrace();
+//        }
+//
+//        return books;
+//    }
 
     @Override
     public Book create(Book book) {

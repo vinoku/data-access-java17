@@ -21,6 +21,7 @@ public class App {
         for (Book book : books) {
             System.out.println("Id: " + book.getId());
             System.out.println("Title: " + book.getTitle());
+            System.out.println("Rating: " + book.getRating());
             System.out.println("==========================");
         }
         System.out.println("============ END: findAll ==============");
