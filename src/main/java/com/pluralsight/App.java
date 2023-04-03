@@ -61,14 +61,26 @@ public class App {
                         .current()
                         .nextInt(1, 6))) // Random number between 1 and 5 included 5
                 .collect(Collectors.toList());
-        bookDao.update(books);
+        bookDao.update(updatedEntries);
 
-        for (Book book : books) {
+        for (Book book : updatedEntries) {
             System.out.println("Id: " + book.getId());
             System.out.println("Title: " + book.getTitle());
             System.out.println("Rating: " + book.getRating());
             System.out.println("==========================");
         }
         System.out.println("=========== END: batch ===============");
+
+
+        System.out.println("=========== delete ===============");
+        List<Book> allBooks = bookDao.findAll();
+        Book bookToDelete = allBooks.get(allBooks.size() - 1);
+
+        System.out.println("Id: " + bookToDelete.getId());
+        System.out.println("Title: " + bookToDelete.getTitle());
+        System.out.println("Rating: " + bookToDelete.getRating());
+
+        bookDao.delete(bookToDelete);
+        System.out.println("=========== END: delete ===============");
     }
 }
